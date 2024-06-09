@@ -1,28 +1,29 @@
 import { useState, useEffect } from "react";
 
 const useWindowDimensions = () => {
-  // Initialize state with the current window width
-  const [width, setWidth] = useState(window?.innerWidth);
+  // Initialize state with undefined to avoid errors during SSR
+  const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : undefined);
   const [screenType, setScreenType] = useState(
-    getScreenType(window?.innerWidth)
+    typeof window !== 'undefined' ? getScreenType(window.innerWidth) : undefined
   );
 
   useEffect(() => {
+    // Early return if window is undefined (i.e., during SSR)
+    if (typeof window === 'undefined') return;
+
     // Define a handler function to update the width and screen type state
     const handleResize = () => {
-      if (typeof window != "undefined") {
-        const newWidth = window?.innerWidth;
-        setWidth(newWidth);
-        setScreenType(getScreenType(newWidth));
-      }
+      const newWidth = window.innerWidth;
+      setWidth(newWidth);
+      setScreenType(getScreenType(newWidth));
     };
 
     // Add event listener for window resize
-    window?.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize);
 
     // Remove event listener on cleanup
     return () => {
-      window?.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -30,7 +31,7 @@ const useWindowDimensions = () => {
 };
 
 // Function to determine screen type based on width
-const getScreenType = (width: number) => {
+const getScreenType = (width:number) => {
   if (width < 768) {
     return ScreenType.MOBILE;
   } else if (width >= 768 && width < 992) {

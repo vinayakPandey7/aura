@@ -26,7 +26,7 @@ export const getStoredState = (
   if (typeof localStorage !== "undefined") {
     const _reduxState = JSON.parse(localStorage.getItem(REDUX_STATE) || "{}");
 
-    if (!isEmpty(_reduxState) && typeof window !== "undefined") {
+    if (!isEmpty(_reduxState) ) {
       const _reducer = _reduxState[reducerName];
       let _decryptedData: any;
       if (_reducer) {
