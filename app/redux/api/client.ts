@@ -9,7 +9,7 @@ import axios from "axios";
 import { AXOIS_TIMEOUT } from "@/app/ts/constants/redux";
 
 // export const BASE_URL = process.env.NEXT_PUBLIC_PP_API_BASE_URL;
-export const BASE_URL = "http://localhost:3000";
+export const BASE_URL = "https://aura-backend-0dnx.onrender.com";
 
 axios.interceptors.request.use(
   (config: any) => {
