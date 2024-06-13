@@ -8,7 +8,7 @@ import React from "react";
 
 const FooterMain = () => {
   return (
-    <div className="p-4 bg-[#fafafa] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 text-[#3D3D3D]  gap-10">
+    <div className="p-6 md:p-10 lg:p-20 bg-[#fafafa] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 text-[#3D3D3D] gap-10 item-cenetr">
       {/* Our story */}
       <div className="">
         <p className="font-bold text-lg mb-4">Our Story</p>
@@ -48,7 +48,7 @@ const FooterMain = () => {
         <p className="font-bold text-lg mb-4">Contact Us</p>
         {/* logo Image here */}
         <div className="flex flex-col gap-[15px] text-[13px]">
-          <p>LOGO_IMG_HERE</p>
+          <p>Gift_Shop_Near_Me</p>
 
           <div className="flex gap-2 items-center">
             <MobileIcon width={12} height={12} />

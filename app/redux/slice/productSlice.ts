@@ -36,7 +36,6 @@ export const productSlice = createSlice({
             action.payload?.markedPrice,
           cartProducts: [...state.cartData.cartProducts, action.payload],
         };
-        console.log("cartData", cartData);
         state.cartData = cartData;
       }
     },
@@ -66,6 +65,16 @@ export const productSlice = createSlice({
         state.wishlist = [...state.wishlist, action.payload];
       }
     },
+    removeItemInWishlist: (state, action) => {
+      const remainingItems = current(state.wishlist)?.filter(
+        (item) => item._id !== action?.payload?._id
+      );
+
+      if (remainingItems) {
+        state.wishlist = remainingItems;
+      }
+    },
+  
   },
   extraReducers: (builders) => {
     getProductListBuilder(builders);
@@ -78,6 +87,7 @@ export const {
   setCartProduct,
   addItemInWishlist,
   delteCartProduct,
+  removeItemInWishlist,
 } = productSlice.actions;
 
 export default productSlice.reducer;

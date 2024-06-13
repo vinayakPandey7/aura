@@ -11,18 +11,11 @@ import { AppDispatch } from "../ts/types/redux";
 import store from "../redux/store";
 import { useEffect } from "react";
 import { getProductList } from "../redux/api/fetcher/product.fetchers";
-const MainPage = ({ toggleSidebar, setCollapsedMenuBar, isLoggedIn }: any) => {
-  // const { scrollYProgress } = useScroll();
-  const current_product = useSelector(Selectors.USER_PRODUCT.CURRENT_PRODUCT);
+const MainPage = () => {
 
-  // const dispatch = useDispatch<AppDispatch>();
-  // useEffect(() => {
-  //   dispatch(getProductList());
-  // }, []);
 
   return (
     <div className="w-full bg-[white] text-[#3D3D3D] flex flex-col gap-14">
-      {/* Menu bar */}
 
       {/* Heading */}
       <div className="flex justify-center flex-col text-center mx-6 mt-[16vh]">
@@ -40,8 +33,7 @@ const MainPage = ({ toggleSidebar, setCollapsedMenuBar, isLoggedIn }: any) => {
 
       {/* User engagement Band */}
       <UserEngagementSection />
-      {/* Footer */}
-      <Footer />
+     
     </div>
   );
 };

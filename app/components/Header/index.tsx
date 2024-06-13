@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { CiHeart, CiMenuBurger } from "react-icons/ci";
 import { FaUserAlt } from "react-icons/fa";
+import { IoMdHeart } from "react-icons/io";
 import { IoSearchOutline } from "react-icons/io5";
 import { LuUserPlus } from "react-icons/lu";
 import { RiShoppingBag3Fill } from "react-icons/ri";
@@ -32,9 +33,9 @@ const Header = ({
         <div className="flex md:hidden cursor-pointer" onClick={toggleSidebar}>
           <TiThMenu size={22} />
         </div>
-        <div className="hidden md:flex">LOGO</div>
+        <div className="hidden md:flex">Gift_Shop_Near_Me</div>
       </div>
-      <div className="flex md:hidden">LOGO</div>
+      <div className="flex md:hidden">Gift_Shop_Near_Me</div>
       <div className="flex gap-4">
         <span className="cursor-pointer hover:underline">
           <IoSearchOutline size={22} />
@@ -43,19 +44,20 @@ const Header = ({
           className="cursor-pointer hover:underline"
           onClick={() => router.push("/wishlist")}
         >
-          <div className="bg-[#43BDAC] text-[white] absolute text-[10px] top-[12px] right-[100px] rounded-full min-w-4 h-4 flex justify-center items-center">
+         {wishListItem?.length > 0 && <div className="bg-[#43BDAC] text-[white] absolute text-[10px] top-[12px] right-[100px] rounded-full min-w-4 h-4 flex justify-center items-center">
             {wishListItem?.length}
-          </div>
-          <CiHeart size={22} />
+          </div>}
+          {wishListItem?.length === 0 && <CiHeart size={22} />}
+          {wishListItem?.length > 0 && <IoMdHeart size={22} color='red'/>}
         </span>
 
         <div
           className="cursor-pointer hover:underline relative"
           onClick={() => toggleViewCart()}
         >
-          <div className="bg-[#43BDAC] text-[white] absolute text-[10px] top-[-8px] left-[18px] rounded-full min-w-4 h-4 flex justify-center items-center">
+         {cart_product?.cartProducts?.length > 0 && <div className="bg-[#43BDAC] text-[white] absolute text-[10px] top-[-8px] left-[18px] rounded-full min-w-4 h-4 flex justify-center items-center">
             {cart_product?.cartProducts?.length}
-          </div>
+          </div>}
           <RiShoppingBag3Fill size={22} />
         </div>
 

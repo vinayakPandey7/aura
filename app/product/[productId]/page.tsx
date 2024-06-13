@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import { useId } from "react";
 import StarRating from "../StarRatingComponent";
@@ -13,6 +13,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Selectors } from "@/app/redux/selectors";
 import { AppDispatch } from "@/app/ts/types/redux";
 import { getProductDetail } from "@/app/redux/api/fetcher/product.fetchers";
+import { addItemInWishlist, removeItemInWishlist, setCartProduct } from "@/app/redux/slice/productSlice";
+import { IoMdHeart } from "react-icons/io";
+import { CiHeart } from "react-icons/ci";
 interface WishlistProps {
   params: {
     productId: string;
@@ -21,6 +24,7 @@ interface WishlistProps {
 const WishlistPage = (props: WishlistProps) => {
   const getUniqueId = () => useId();
   const dispatch = useDispatch<AppDispatch>();
+  const [isInWishList,setIsInWishlist] = useState(false);
   const { productId } = props.params;
 
   console.log("sdfsdf", props.params);
@@ -28,101 +32,53 @@ const WishlistPage = (props: WishlistProps) => {
   useEffect(() => {
     if (productId) {
       dispatch(getProductDetail({ productId: productId }));
+
     }
   }, []);
 
   const productData = useSelector(Selectors.USER_PRODUCT.PRODUCT_DETAIL);
 
-  // const productDetail: any = {
-  //   _id: getUniqueId(),
-  //   imageUrl:
-  //     "https://img.freepik.com/free-photo/fresh-autumn-leaves-reveal-vibrant-organic-pattern-generated-by-ai_188544-15037.jpg?size=626&ext=jpg&ga=GA1.1.2082370165.1716508800&semt=ais_user",
-  //   productDiscount: 12, // product collection
-  //   productName: "Framed Digital Painting", // product collection
-  //   markedPrice: 2000, // product collection
-  //   currentPrice: 1200, // product collection
-  //   rating: {
-  //     userReview: [
-  //       {
-  //         rating: 4,
-  //         title: "Amazing Product",
-  //         reviewDesc: "description",
-  //         customerName: "Ritesh",
-  //         isCertifiedBuyer: true,
-  //       },
-  //       {
-  //         rating: 5,
-  //         title: "Awesome Product best product",
-  //         reviewDesc: "It is the best product that you can have n market",
-  //         customerName: "Raghuram rajan",
-  //         isCertifiedBuyer: true,
-  //       },
-  //       {
-  //         rating: 4,
-  //         title: "Killer Product",
-  //         reviewDesc: "It is the best product that you can have n market",
-  //         customerName: "Vinayak Pandey",
-  //         isCertifiedBuyer: true,
-  //       },
-  //     ],
-  //     overallRating: 3.5,
-  //     ratingFiveCount: 1400,
-  //     ratingFourCount: 1200,
-  //     ratingThreeCount: 2080,
-  //     ratingTwoCount: 2000,
-  //     ratingOneCount: 2800,
-  //     totalRatingCount: 3000,
-  //     totalReviewCount: 239,
-  //   }, // review collection
-  //   reviewCount: 169, // review collection
-  //   inStock: true, // product collection
-  //   productImgs: [
-  //     {
-  //       imgUrl:
-  //         "https://img.freepik.com/free-photo/fresh-autumn-leaves-reveal-vibrant-organic-pattern-generated-by-ai_188544-15037.jpg?size=626&ext=jpg&ga=GA1.1.2082370165.1716508800&semt=ais_user",
-  //     },
-  //     {
-  //       imgUrl:
-  //         "https://img.freepik.com/free-photo/fresh-autumn-leaves-reveal-vibrant-organic-pattern-generated-by-ai_188544-15037.jpg?size=626&ext=jpg&ga=GA1.1.2082370165.1716508800&semt=ais_user",
-  //     },
-  //     {
-  //       imgUrl:
-  //         "https://img.freepik.com/free-photo/fresh-autumn-leaves-reveal-vibrant-organic-pattern-generated-by-ai_188544-15037.jpg?size=626&ext=jpg&ga=GA1.1.2082370165.1716508800&semt=ais_user",
-  //     },
-  //   ],
-  //   productSpecs: [
-  //     {
-  //       desc: "Unique Gift for Birthday, Anniversary, Wedding and any other occasion.",
-  //     },
-  //     {
-  //       desc: "Beautifully Craved On Leaf",
-  //     },
-  //     { desc: "Stay Forever Same" },
-  //     { desc: "Get it with Acrylic Frame" },
-  //   ],
-  //   productDescription: "",
-  //   isAddedToCard: false, // frontend handled
-  //   EstimatedDelivery: "", // TODO: need to implement no provision in 1.0 release
-  //   noOfPeopleLookingForThisProduct: 99, // no provision as of now
-
-  //   shippingPolicy: "", // frontend handled
-  // };
-
   const handleAddToCart = () => {
-    // dispatch(setCartProduct(productDetail));
+    dispatch(setCartProduct(productData?.productDetail));
   };
 
-  // const userReview = productDetail?.rating?.userReview;
+  const handleAddToWishlist = () => {
+    if(!isInWishList){
+     
+      dispatch(addItemInWishlist(productData?.productDetail));
+      
+    }else {
+     
+      dispatch(removeItemInWishlist(productData?.productDetail))
+    }
+   
+  };
+
+  const cart_product = useSelector(Selectors.USER_PRODUCT.CART_PRODUCT);
+  const wishListItem = useSelector(Selectors.USER_PRODUCT.WISHLIST_PRODUCT);
 
   if (!productData) return null;
-  console.log("sjdbfjsdbjfhs", productData);
+  console.log("sjdbfjsdbjfhs", productData?.productDetail);
 
+  useEffect(() => {
+    const isProductAddedInWishlist =  wishListItem?.find( res => res._id === productId)
+    if(isProductAddedInWishlist){
+      setIsInWishlist(true)
+    }else{
+      setIsInWishlist(false)
+    }
+  },[wishListItem])
+  
   const { productDetail, reviewRatingData } = productData;
   return (
     <div>
       <div className="mx-4 md:mx-auto md:w-[80%] grid grid-cols-1 md:grid-cols-2 mt-20 gap-6">
         {/* Image section */}
-        <div className="pr-3 pt-2">
+        <div className="pr-3 pt-2 relative">
+        {productDetail && <div onClick={handleAddToWishlist} className="cursor-pointer p-2 bg-[white] rounded-full absolute z-99 right-[20px] top-[16px]" style={{zIndex:10, boxShadow: '0 1px 4px 0 rgba(0,0,0,.1)'}}>
+              {!isInWishList && <CiHeart size={22} />}
+              {isInWishList && <IoMdHeart size={22} color='red'/>}
+            </div>}
           <Carousel
             infiniteLoop={true}
             showThumbs={true}
@@ -157,6 +113,7 @@ const WishlistPage = (props: WishlistProps) => {
             >
               {productDetail?.inStock ? "In Stock" : "Out of Stock"}
             </div>
+           
           </div>
           {reviewRatingData?.overallRating && (
             <div className="mt-4">
