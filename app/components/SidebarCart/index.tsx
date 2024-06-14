@@ -17,7 +17,7 @@ import { setCartProduct, delteCartProduct } from "@/app/redux/slice";
 import { AppDispatch } from "@/app/ts/types/redux";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
-import emptyCartLottieAnimation from "../../assets/lottie/EmptyCart.json";
+import emptyCartLottieAnimation from "../../assets/lottie/emptyCart.json";
 import { toast } from "react-toastify";
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
