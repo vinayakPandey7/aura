@@ -12,6 +12,7 @@ import {
   setCurrentProduct,
 } from "@/app/redux/slice/productSlice";
 
+import { ToastContainer, toast } from "react-toastify";
 // components/IconButton.js
 
 const IconButton = ({ icon, label, handleClicked }: any) => {
@@ -29,6 +30,7 @@ const IconButton = ({ icon, label, handleClicked }: any) => {
 
 const ProductCard = ({ productItems }: { productItems: ProductItemProps }) => {
   const router = useRouter();
+
   const handleShowProductDetail = () => {
     // dispatch(setCurrentProduct(productItems));
     router.push(`/product/${productItems?._id}`);
@@ -37,10 +39,12 @@ const ProductCard = ({ productItems }: { productItems: ProductItemProps }) => {
 
   const dispatch = useDispatch<AppDispatch>();
   const handleAddToCart = () => {
+    toast("Added to Cart");
     dispatch(setCartProduct(productItems));
   };
 
   const handleAddToWishlist = () => {
+    toast("Added in Wishlist");
     dispatch(addItemInWishlist(productItems));
   };
 

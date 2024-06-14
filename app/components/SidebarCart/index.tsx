@@ -15,6 +15,11 @@ import { Selectors } from "@/app/redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import { setCartProduct, delteCartProduct } from "@/app/redux/slice";
 import { AppDispatch } from "@/app/ts/types/redux";
+import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
+import emptyCartLottieAnimation from "../../assets/lottie/EmptyCart.json";
+import { toast } from "react-toastify";
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 const SidebarCart = ({
   cartViewCollapsed,
@@ -29,36 +34,16 @@ const SidebarCart = ({
   const dispatch = useDispatch<AppDispatch>();
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
-  // const productItems: ProductItemProps[] = [
-  //   {
-  //     _id: getUniqueId(),
-  //     imageUrl:
-  //       "https://img.freepik.com/free-photo/fresh-autumn-leaves-reveal-vibrant-organic-pattern-generated-by-ai_188544-15037.jpg?size=626&ext=jpg&ga=GA1.1.2082370165.1716508800&semt=ais_user",
-  //     productDiscount: 12,
-  //     productName: "Framed Digital Painting",
-  //     markedPrice: 2000,
-  //     currentPrice: 1200,
-  //   },
-  //   {
-  //     _id: getUniqueId(),
-  //     imageUrl:
-  //       "https://img.freepik.com/free-photo/fresh-autumn-leaves-reveal-vibrant-organic-pattern-generated-by-ai_188544-15037.jpg?size=626&ext=jpg&ga=GA1.1.2082370165.1716508800&semt=ais_user",
-  //     productDiscount: 17,
-  //     productName: "Leaf Art Portrait",
-  //     markedPrice: 3000,
-  //     currentPrice: 1700,
-  //   },
-  // ];
-
   const cartItem = useSelector(Selectors.USER_PRODUCT.CART_PRODUCT);
 
   // Function to remove item by _id
-  const removeCartItem = (productId: any) => {
+  const removeCartItem = (product: any) => {
     // const updatedCartItems = cartItem?.cartProducts.filter(
     //   (item) => item._id !== productId
     // );
     // update cart item in redux
-    dispatch(delteCartProduct(productId));
+    toast(`${product?.productName} Removed from Cart`);
+    dispatch(delteCartProduct(product));
   };
 
   useEffect(() => {
@@ -79,75 +64,98 @@ const SidebarCart = ({
           <RxCross2 size={18} />
         </div>
       </div>
-      <ul className="p-4 flex flex-col gap-3">
-        {cartItem?.cartProducts?.map((product, index) => (
-          <div key={index}>
-            <div className=" flex gap-[15px] ">
-              <img
-                src={product?.imageUrl}
-                alt="product image"
-                className="max-w-[100px]"
-              />
-              {/* name + rate  */}
-              <div className="flex flex-col  w-full">
-                {/* name */}
-                <div className="flex  justify-between ">
-                  <div className="text-[13px] font-normal line-clamp-3 max-w-[70%]">
-                    {product.productName}
-                  </div>
-                  <div
-                    className="mr-2 cursor-pointer"
-                    onClick={() => removeCartItem(product)}
-                  >
-                    <RiDeleteBinLine size={20} />
-                  </div>
-                </div>
-                <div className="text-[11px] text-[#6a6868] font-extralight line-clamp-1 max-w-[80%]">
-                  {product?.productDescription}
-                  Single / Normal / Without Frame
-                </div>
-                {/* rate  */}
-                <div>
-                  <div className="text-[13px] mt-3">
-                    Rs. {product?.currentPrice}.00
-                  </div>
-                  {/* TODO: add incrementar here */}
-                </div>
-              </div>
-            </div>
+
+      {cartItem?.cartProducts?.length === 0 && (
+        <div className="w-full flex justify-center item-center h-[calc(100%_-_4rem)]">
+          <div className="flex flex-col justify-center item-center gap-8 text-center w-[40%] h-full w-full">
+            <Lottie loop={true} animationData={emptyCartLottieAnimation} />
+            <h2 className="font-semibold">No Item in Cart</h2>
           </div>
-        ))}
-      </ul>
-      {/* Summary */}
-      <hr />
-      <div className="mt-5 mx-4 ">
-        <div className="text-[14px] font-bold flex justify-between mb-2.5 ">
-          <span>SUBTOTAL: </span>
-          <span>Rs. {cartItem?.cartTotalPrice}.00 </span>
         </div>
-        <p className="mb-[15px] text-sm font-light">
-          Shipping & taxes calculated at checkout
-        </p>
-        <p className="mb-5 text-sm font-light">
-          <input
-            type="checkbox"
-            className="mr-2"
-            onClick={() => setIsChecked(!isChecked)}
-          />
-          I agree with the terms and conditions
-        </p>
-        <button
-          className="bg-[#5cb25d] text-[white] font-normal text-[13px] w-full py-2.5 mb-2.5"
-          style={{
-            opacity: isChecked ? 1 : 0.5,
-          }}
-        >
-          PROCEED TO CHECKOUT
-        </button>
-        <button className="bg-[#e34848] text-[white] font-normal text-[13px] w-full py-2.5 mb-2.5">
-          VIEW CART
-        </button>
-      </div>
+      )}
+
+      {cartItem?.cartProducts?.length > 0 && (
+        <>
+          <ul className="p-4 flex flex-col gap-3">
+            {cartItem?.cartProducts?.map((product, index) => (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.2 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.8,
+                  delay: 0.5,
+                  ease: [0, 0.71, 0.2, 1.01],
+                }}
+                key={index}
+              >
+                <div className=" flex gap-[15px] ">
+                  <img
+                    src={product?.imageUrl}
+                    alt="product image"
+                    className="max-w-[100px]"
+                  />
+                  {/* name + rate  */}
+                  <div className="flex flex-col  w-full">
+                    {/* name */}
+                    <div className="flex  justify-between ">
+                      <div className="text-[13px] font-normal line-clamp-3 max-w-[70%]">
+                        {product.productName}
+                      </div>
+                      <div
+                        className="mr-2 cursor-pointer"
+                        onClick={() => removeCartItem(product)}
+                      >
+                        <RiDeleteBinLine size={20} />
+                      </div>
+                    </div>
+                    <div className="text-[11px] text-[#6a6868] font-extralight line-clamp-1 max-w-[80%]">
+                      {product?.productDescription}
+                      Single / Normal / Without Frame
+                    </div>
+                    {/* rate  */}
+                    <div>
+                      <div className="text-[13px] mt-3">
+                        Rs. {product?.currentPrice}.00
+                      </div>
+                      {/* TODO: add incrementar here */}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </ul>
+          {/* Summary */}
+          <hr />
+          <div className="mt-5 mx-4 ">
+            <div className="text-[14px] font-bold flex justify-between mb-2.5 ">
+              <span>SUBTOTAL: </span>
+              <span>Rs. {cartItem?.cartTotalPrice}.00 </span>
+            </div>
+            <p className="mb-[15px] text-sm font-light">
+              Shipping & taxes calculated at checkout
+            </p>
+            <p className="mb-5 text-sm font-light">
+              <input
+                type="checkbox"
+                className="mr-2"
+                onClick={() => setIsChecked(!isChecked)}
+              />
+              I agree with the terms and conditions
+            </p>
+            <button
+              className="bg-[#5cb25d] text-[white] font-normal text-[13px] w-full py-2.5 mb-2.5"
+              style={{
+                opacity: isChecked ? 1 : 0.5,
+              }}
+            >
+              PROCEED TO CHECKOUT
+            </button>
+            <button className="bg-[#e34848] text-[white] font-normal text-[13px] w-full py-2.5 mb-2.5">
+              VIEW CART
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };
